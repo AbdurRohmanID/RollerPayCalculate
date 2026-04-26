@@ -7,191 +7,274 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 20px;
-            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .kalkulator {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
             max-width: 400px;
-            margin: 0 auto;
+            margin-top: 20px;
         }
         h2 {
             text-align: center;
-            color: #2c3e50;
-            font-size: 22px;
+            color: #333;
+            margin-top: 0;
             margin-bottom: 20px;
+            font-size: 22px;
             line-height: 1.4;
         }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 5px;
+        .grup-input {
+            margin-bottom: 15px;
         }
-        input[type="number"], select {
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
-            background-color: #fff;
+            background-color: white;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
         }
         button {
             width: 100%;
-            background-color: #27ae60;
+            padding: 14px;
+            background-color: #007bff;
             color: white;
-            padding: 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #2ecc71;
+            background-color: #0056b3;
         }
-        .hasil-container {
+        .hasil-box {
             margin-top: 25px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .hasil-box p {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+        }
+        .hasil-box h3 {
+            margin: 0;
+            color: #28a745;
+            font-size: 28px;
+            word-break: break-all;
+        }
+        .detail-box {
+            margin-top: 15px;
             padding: 15px;
-            background-color: #e8f8f5;
-            border-left: 4px solid #27ae60;
-            border-radius: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #444;
             display: none;
         }
-        .hasil-container h3 {
+        .detail-box h4 {
             margin-top: 0;
-            font-size: 18px;
-            color: #2c3e50;
-        }
-        .rincian {
-            font-family: monospace;
+            margin-bottom: 10px;
+            color: #333;
             font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            color: #555;
-            background: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #d1f2eb;
         }
-        .total {
-            font-size: 16px;
-            margin-bottom: 8px;
+        .detail-item {
+            margin-bottom: 6px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .highlight {
-            color: #c0392b;
-            font-size: 18px;
+        .detail-item small {
+            color: #777;
+            font-size: 11px;
         }
-        .footer {
+        .detail-total {
+            font-weight: bold;
+            margin-top: 12px;
+            color: #222;
+            text-align: right;
+            border-top: 2px solid #ccc;
+            padding-top: 8px;
+        }
+        .detail-pembagian {
+            font-weight: bold;
+            margin-top: 8px;
+            color: #007bff;
+            text-align: right;
+        }
+        .footer-teks {
             text-align: center;
-            margin-top: 30px;
-            font-size: 13px;
-            color: #7f8c8d;
-            line-height: 1.6;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #888;
+            line-height: 1.5;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="kalkulator">
     <h2>KALKULATOR PRODUKSI<br>ROLLER</h2>
     
-    <label for="produksi">Total Produksi (pcs):</label>
-    <input type="number" id="produksi" placeholder="Masukkan total produksi..." min="0">
+    <div class="grup-input">
+        <label for="hasilMesin">HASIL MESIN</label>
+        <input type="number" id="hasilMesin" placeholder="Masukkan total hasil mesin" min="0">
+    </div>
 
-    <label for="rawVariant">Pilihan RAW:</label>
-    <select id="rawVariant">
-        <option value="1">No Shringkit</option>
-        <option value="0.4">0,4</option>
-        <option value="0.7">0,7</option>
-        <option value="0.8">0,8</option>
-        <option value="1.1">1,1</option>
-    </select>
+    <div class="grup-input">
+        <label for="rawVariant">PILIHAN RAW</label>
+        <select id="rawVariant">
+            <option value="1">No Shringkit</option>
+            <option value="0.4">0,4</option>
+            <option value="0.7">0,7</option>
+            <option value="0.8">0,8</option>
+            <option value="1.1">1,1</option>
+        </select>
+    </div>
+    
+    <div class="grup-input">
+        <label for="jumlahOrang">JUMLAH ORANG</label>
+        <input type="number" id="jumlahOrang" placeholder="Masukkan jumlah orang" min="1" value="1">
+    </div>
+    
+    <button onclick="hitungGaji()">HITUNG GAJI</button>
+    
+    <div class="hasil-box">
+        <p>GAJI ANDA</p>
+        <h3 id="gajiAnda">Rp0,00</h3>
+    </div>
 
-    <label for="tim">Jumlah Orang:</label>
-    <input type="number" id="tim" placeholder="Masukkan jumlah orang..." min="1" value="1">
-
-    <button onclick="hitungGaji()">Hitung Gaji</button>
-
-    <div class="hasil-container" id="hasil-container">
-        <h3>Hasil Perhitungan</h3>
-        <div class="rincian" id="rincian"></div>
-        <div class="total" id="total-gaji"></div>
-        <div class="total highlight" id="gaji-individu"></div>
+    <div class="detail-box" id="detailBox">
+        <h4>Detail Perhitungan:</h4>
+        <div id="isiDetail"></div>
+    </div>
+    
+    <div class="footer-teks">
+        PaymentCalculate v2.0<br>
+        By abdur_rohman.id
     </div>
 </div>
 
-<div class="footer">
-    PaymentCalculate v2.0<br>
-    By abdur_rohman.id
-</div>
-
 <script>
+    function formatRp(angka) {
+        let formatted = new Intl.NumberFormat('id-ID', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(angka);
+        return "Rp" + formatted;
+    }
+
+    function formatRibuan(angka) {
+        return new Intl.NumberFormat('id-ID').format(angka);
+    }
+
     function hitungGaji() {
-        let produksi = parseInt(document.getElementById('produksi').value) || 0;
-        let tim = parseInt(document.getElementById('tim').value) || 1;
+        let hasilInput = document.getElementById('hasilMesin').value;
+        let orangInput = document.getElementById('jumlahOrang').value;
         let rawMultiplier = parseFloat(document.getElementById('rawVariant').value);
         let variantText = document.getElementById('rawVariant').options[document.getElementById('rawVariant').selectedIndex].text;
-        
-        if (produksi <= 0) {
-            alert("Silakan masukkan total produksi yang valid.");
+
+        let hasil = parseFloat(hasilInput) || 0;
+        let orang = parseInt(orangInput);
+
+        if (!orangInput || orang < 1) {
+            alert("Mohon masukkan JUMLAH ORANG yang valid (minimal 1).");
             return;
         }
 
-        let sisa = produksi;
-        let totalGajiAwal = 0;
-        let rincianHTML = '';
+        let totalUangAwal = 0;
+        let sisaHasil = hasil;
+        let detailHTML = "";
 
-        // Penyesuaian format rupiah tanpa spasi dan 2 digit di belakang koma
-        const formatRp = (angka) => 'Rp' + angka.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
+        // Kuota & Pengali Produksi Roller
         const tiers = [
-            { maxQty: 300, multiplier: 190, label: "1 - 300" },
-            { maxQty: 275, multiplier: 221, label: "301 - 575" },
-            { maxQty: 250, multiplier: 257, label: "576 - 825" },
-            { maxQty: 250, multiplier: 292, label: "826 - 1075" },
-            { maxQty: 275, multiplier: 328, label: "1076 - 1350" },
-            { maxQty: 225, multiplier: 361, label: "1351 - 1575" },
-            { maxQty: Infinity, multiplier: 395, label: "1576 - ke atas" }
+            { maxQty: 300, multiplier: 190, label: "Payment 1 (1 - 300)" },
+            { maxQty: 275, multiplier: 221, label: "Payment 2 (301 - 575)" },
+            { maxQty: 250, multiplier: 257, label: "Payment 3 (576 - 825)" },
+            { maxQty: 250, multiplier: 292, label: "Payment 4 (826 - 1075)" },
+            { maxQty: 275, multiplier: 328, label: "Payment 5 (1076 - 1350)" },
+            { maxQty: 225, multiplier: 361, label: "Payment 6 (1351 - 1575)" },
+            { maxQty: Infinity, multiplier: 395, label: "Payment 7 (1576 - dst)" }
         ];
 
+        // Hitung Progresif
         for (let i = 0; i < tiers.length; i++) {
-            if (sisa > 0) {
-                let qtyTerkini = Math.min(sisa, tiers[i].maxQty);
-                let gajiTerkini = qtyTerkini * tiers[i].multiplier;
+            if (sisaHasil > 0) {
+                let kapasitas = Math.min(sisaHasil, tiers[i].maxQty);
+                let hasilUang = kapasitas * tiers[i].multiplier;
                 
-                totalGajiAwal += gajiTerkini;
-                rincianHTML += `${tiers[i].label}: ${qtyTerkini} pcs x ${tiers[i].multiplier} = ${formatRp(gajiTerkini)}<br>`;
+                totalUangAwal += hasilUang;
+                sisaHasil -= kapasitas;
                 
-                sisa -= qtyTerkini;
+                detailHTML += `
+                    <div class="detail-item">
+                        <span>${tiers[i].label}<br><small>(${formatRibuan(kapasitas)} × ${tiers[i].multiplier})</small></span> 
+                        <span><b>${formatRp(hasilUang)}</b></span>
+                    </div>`;
             } else {
                 break;
             }
         }
 
-        let totalGajiAkhir = totalGajiAwal * rawMultiplier;
-        
-        if (rawMultiplier !== 1) {
-            rincianHTML += `<hr>Subtotal: ${formatRp(totalGajiAwal)}<br>`;
-            rincianHTML += `Varian RAW (${variantText}): x ${rawMultiplier.toString().replace('.', ',')}`;
+        if (hasil === 0) {
+            detailHTML += `<div class="detail-item" style="justify-content: center;">Tidak ada hasil produksi.</div>`;
         }
 
-        let gajiIndividu = totalGajiAkhir / tim;
+        // Terapkan Pengali RAW
+        let totalUangAkhir = totalUangAwal * rawMultiplier;
 
-        document.getElementById('rincian').innerHTML = rincianHTML;
-        document.getElementById('total-gaji').innerHTML = `<strong>Total Gaji Tim:</strong> ${formatRp(totalGajiAkhir)}`;
-        document.getElementById('gaji-individu').innerHTML = `<strong>Gaji Anda (${tim} orang):</strong> ${formatRp(gajiIndividu)}`;
-        
-        document.getElementById('hasil-container').style.display = 'block';
+        if (rawMultiplier !== 1) {
+            detailHTML += `<div class="detail-total">Subtotal: ${formatRp(totalUangAwal)}</div>`;
+            detailHTML += `
+                <div class="detail-item" style="margin-top: 8px; border-bottom: none; border-top: 1px dashed #ccc; padding-top: 8px;">
+                    <span style="color: #d35400;"><b>Varian RAW (${variantText})</b></span> 
+                    <span style="color: #d35400;"><b>× ${rawMultiplier.toString().replace('.', ',')}</b></span>
+                </div>`;
+        }
+
+        let gajiPerOrang = totalUangAkhir / orang;
+
+        // Menampilkan Hasil
+        document.getElementById('gajiAnda').innerText = formatRp(gajiPerOrang);
+        document.getElementById('isiDetail').innerHTML = detailHTML;
+        document.getElementById('isiDetail').innerHTML += `<div class="detail-total">Total Rupiah: ${formatRp(totalUangAkhir)}</div>`;
+        document.getElementById('isiDetail').innerHTML += `<div class="detail-pembagian">Dibagi ${orang} Orang = ${formatRp(gajiPerOrang)}</div>`;
+        document.getElementById('detailBox').style.display = 'block';
     }
 </script>
 
