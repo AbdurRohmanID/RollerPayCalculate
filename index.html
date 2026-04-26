@@ -1,1 +1,199 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Produksi Roller V2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #fff;
+        }
+        button {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2ecc71;
+        }
+        .hasil-container {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-left: 4px solid #27ae60;
+            border-radius: 5px;
+            display: none;
+        }
+        .hasil-container h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .rincian {
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #555;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #d1f2eb;
+        }
+        .total {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .highlight {
+            color: #c0392b;
+            font-size: 18px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Kalkulator Produksi Roller</h2>
+    
+    <label for="produksi">Total Produksi (pcs):</label>
+    <input type="number" id="produksi" placeholder="Masukkan total produksi..." min="0">
+
+    <label for="rawVariant">Pilih Varian RAW:</label>
+    <select id="rawVariant">
+        <option value="1">No Shringkit</option>
+        <option value="0.4">0,4</option>
+        <option value="0.7">0,7</option>
+        <option value="0.8">0,8</option>
+        <option value="1.1">1,1</option>
+    </select>
+
+    <label for="tim">Jumlah Anggota Tim:</label>
+    <input type="number" id="tim" placeholder="Masukkan jumlah orang..." min="1" value="1">
+
+    <button onclick="hitungGaji()">Hitung Gaji</button>
+
+    <div class="hasil-container" id="hasil-container">
+        <h3>Hasil Perhitungan</h3>
+        <div class="rincian" id="rincian"></div>
+        <div class="total" id="total-gaji"></div>
+        <div class="total highlight" id="gaji-individu"></div>
+    </div>
+</div>
+
+<div class="footer">
+    By abdur_rohman.id
+</div>
+
+<script>
+    function hitungGaji() {
+        let produksi = parseInt(document.getElementById('produksi').value) || 0;
+        let tim = parseInt(document.getElementById('tim').value) || 1;
+        let rawMultiplier = parseFloat(document.getElementById('rawVariant').value);
+        let variantText = document.getElementById('rawVariant').options[document.getElementById('rawVariant').selectedIndex].text;
+        
+        if (produksi <= 0) {
+            alert("Silakan masukkan total produksi yang valid.");
+            return;
+        }
+
+        let sisa = produksi;
+        let totalGajiAwal = 0;
+        let rincianHTML = '';
+
+        const formatRp = (angka) => 'Rp' + Math.round(angka).toLocaleString('id-ID');
+
+        // Kuota per rentang sesuai standar Opsi 1
+        const tiers = [
+            { maxQty: 300, multiplier: 190, label: "1 - 300" },
+            { maxQty: 275, multiplier: 221, label: "301 - 575" },
+            { maxQty: 250, multiplier: 257, label: "576 - 825" },
+            { maxQty: 250, multiplier: 292, label: "826 - 1075" },
+            { maxQty: 275, multiplier: 328, label: "1076 - 1350" },
+            { maxQty: 225, multiplier: 361, label: "1351 - 1575" },
+            { maxQty: Infinity, multiplier: 395, label: "1576 - ke atas" }
+        ];
+
+        // 1. Hitung Gaji Progresif Dasar
+        for (let i = 0; i < tiers.length; i++) {
+            if (sisa > 0) {
+                let qtyTerkini = Math.min(sisa, tiers[i].maxQty);
+                let gajiTerkini = qtyTerkini * tiers[i].multiplier;
+                
+                totalGajiAwal += gajiTerkini;
+                rincianHTML += `${tiers[i].label}: ${qtyTerkini} pcs x ${tiers[i].multiplier} = ${formatRp(gajiTerkini)}<br>`;
+                
+                sisa -= qtyTerkini;
+            } else {
+                break;
+            }
+        }
+
+        // 2. Terapkan Pengali RAW
+        let totalGajiAkhir = totalGajiAwal * rawMultiplier;
+        
+        if (rawMultiplier !== 1) {
+            rincianHTML += `<hr>Subtotal: ${formatRp(totalGajiAwal)}<br>`;
+            rincianHTML += `Varian RAW (${variantText}): x ${rawMultiplier.toString().replace('.', ',')}`;
+        }
+
+        let gajiIndividu = totalGajiAkhir / tim;
+
+        // Menampilkan hasil
+        document.getElementById('rincian').innerHTML = rincianHTML;
+        document.getElementById('total-gaji').innerHTML = `<strong>Total Gaji Tim:</strong> ${formatRp(totalGajiAkhir)}`;
+        document.getElementById('gaji-individu').innerHTML = `<strong>Gaji Individu (${tim} orang):</strong> ${formatRp(gajiIndividu)}`;
+        
+        document.getElementById('hasil-container').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
