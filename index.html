@@ -146,11 +146,6 @@
 
 <div class="kalkulator">
     <h2>KALKULATOR GAJI<br>ROLLER</h2>
-    
-    <div class="grup-input">
-        <label for="hasilMesin">HASIL MESIN</label>
-        <input type="number" id="hasilMesin" placeholder="Masukkan hasil mesin anda" min="0">
-    </div>
 
     <div class="grup-input">
         <label for="rawVariant">PILIHAN RAW</label>
@@ -164,8 +159,13 @@
     </div>
     
     <div class="grup-input">
+        <label for="hasilMesin">HASIL MESIN</label>
+        <input type="number" id="hasilMesin" placeholder="Masukkan hasil mesin anda" min="0">
+    </div>
+    
+    <div class="grup-input">
         <label for="jumlahOrang">JUMLAH ORANG</label>
-        <input type="number" id="jumlahOrang" placeholder="Masukkan jumlah orang" min="1" value="1">
+        <input type="number" id="jumlahOrang" placeholder="Masukkan jumlah orang" min="1">
     </div>
     
     <button onclick="hitungGaji()">HITUNG GAJI</button>
